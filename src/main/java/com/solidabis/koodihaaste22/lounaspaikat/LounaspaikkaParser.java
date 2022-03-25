@@ -12,7 +12,7 @@ public class LounaspaikkaParser {
         var document = Jsoup.parse(html);
         var restaurantElements = document.select("div.menu.item");
         return restaurantElements.stream()
-                .map(element -> parseRestaurant(element))
+                .map(this::parseRestaurant)
                 .collect(Collectors.toList());
     }
 
@@ -27,11 +27,15 @@ public class LounaspaikkaParser {
 
     private List<Dish> parseDishes(Element element) {
         var dishElements = element.select("li.menu-item")
-                .stream().map(dish -> Dish.builder()
-                        .name(dish.select("p.dish").text())
-                        .attributes(dish.select("p.dish a").stream().map(Element::text).collect(Collectors.toList()))
-                        .build());
+                .stream().map(this::parseDish);
         return dishElements.collect(Collectors.toList());
+    }
+
+    private Dish parseDish(Element dish) {
+        return Dish.builder()
+                .name(dish.select("p.dish").text())
+                .attributes(dish.select("p.dish a").stream().map(Element::text).collect(Collectors.toList()))
+                .build();
     }
 
     private String parseCity(String address) {
