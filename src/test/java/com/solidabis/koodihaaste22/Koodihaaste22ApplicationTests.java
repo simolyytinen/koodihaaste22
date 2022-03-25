@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,5 +38,41 @@ class Koodihaaste22ApplicationTests {
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
 				.andExpect(cookie().doesNotExist(VOTERID_COOKIE_NAME));
+	}
+
+	@Test
+	void shouldReturnListOfLounaspaikatFromKempele() throws Exception {
+		/*
+		GET /lounaspaikat/Kempele
+		{
+		   "alreadyVoted": false,
+		   "restaurants": [
+		   	   {
+		   	      "id": "98rewu98rweu89rew98",
+		   	      "name": "Shell HelmiSimpukka Kempele",
+		   	      "openingHours": "10-14",
+		   	      "votes": 10,
+		   	      "dishes": [
+		   	         { "name": "Helmen lihapullaa ja ruskeaa kastiketta",
+		   	           "price": "10,90EUR",
+		   	           "attributes": ["G","L"]
+		   	         }
+		   	      ]
+		   	   }
+		   ]
+		}
+		 */
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.alreadyVoted").isBoolean())
+				.andExpect(jsonPath("$.restaurants").isArray())
+				.andExpect(jsonPath("$.restaurants[0].id").isString())
+				.andExpect(jsonPath("$.restaurants[0].name").isString())
+				.andExpect(jsonPath("$.restaurants[0].openingHours").isString())
+				.andExpect(jsonPath("$.restaurants[0].votes").isNumber())
+				.andExpect(jsonPath("$.restaurants[0].dishes").isArray())
+				.andExpect(jsonPath("$.restaurants[0].dishes[0].name").isString())
+				.andExpect(jsonPath("$.restaurants[0].dishes[0].price").isString())
+				.andExpect(jsonPath("$.restaurants[0].dishes[0].attributes").isArray());
 	}
 }
