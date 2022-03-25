@@ -1,8 +1,10 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
+import com.solidabis.koodihaaste22.aanestys.VoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,9 @@ import java.util.List;
 @RestController
 public class LounaspaikkaController {
     private static final String VOTERID_COOKIE_NAME = "VOTERID";
+
+    @Autowired
+    private VoteRepository voteRepository;
 
     @GetMapping("/lounaspaikat/{city}")
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name=VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
@@ -39,7 +44,7 @@ public class LounaspaikkaController {
                     .id("9rewu9rewrew9u")
                     .name("Shell HelmiSimpukka Kempele")
                     .openingHours("10-14")
-                    .votes(10)
+                    .votes(voteRepository.getVotes("9rewu9rewrew9u"))
                     .dishes(dishes)
                     .build()
         );

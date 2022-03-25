@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.servlet.http.Cookie;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -74,5 +75,15 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(jsonPath("$.restaurants[0].dishes[0].name").isString())
 				.andExpect(jsonPath("$.restaurants[0].dishes[0].price").isString())
 				.andExpect(jsonPath("$.restaurants[0].dishes[0].attributes").isArray());
+	}
+
+	@Test
+	public void shouldAddVoteCountAfterVoting() throws Exception {
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u"))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.restaurants[0].votes").value(11));
 	}
 }
