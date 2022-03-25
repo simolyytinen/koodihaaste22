@@ -10,13 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class LounaspaikkaController {
+    private static final String VOTERID_COOKIE_NAME = "VOTERID";
+
     @GetMapping("/lounaspaikat/{city}")
-    public String haeLounasPaikat(@CookieValue(name="VOTERID", required = false) String voterIdCookie,
+    public String haeLounasPaikat(@CookieValue(name=VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                   @PathVariable("city") String city,
                                   HttpServletResponse response) {
         if(voterIdCookie==null) {
             // lähetä cookie
-            var cookie = new Cookie("VOTERID", "432432432432");
+            var cookie = new Cookie(VOTERID_COOKIE_NAME, "432432432432");
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
         }
