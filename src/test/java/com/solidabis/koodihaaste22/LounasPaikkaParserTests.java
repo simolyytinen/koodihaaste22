@@ -32,6 +32,17 @@ public class LounasPaikkaParserTests {
         assertEquals(3, lounasPaikat.size());
     }
 
+    @Test
+    public void shouldParseRestaurantProperties() {
+        String html = getTestHtml("kempele.html");
+        var paikat = parser.parse(html);
+        assertEquals("Rosso Zeppelin, Kempele", paikat.get(0).getName());
+        assertEquals("11-14", paikat.get(0).getOpeningHours());
+        assertEquals("Kempele", paikat.get(0).getCity());
+        assertEquals("Wieninleike l", paikat.get(0).getDishName(0));
+        assertEquals("l", paikat.get(0).getDishAttributes(0).get(0));
+    }
+
     private String getTestHtml(String resourceName) {
         var resource = Resources.getResource(resourceName);
         try {
