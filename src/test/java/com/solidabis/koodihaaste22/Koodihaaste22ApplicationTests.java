@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class Koodihaaste22ApplicationTests {
 	public static final String VOTERID_COOKIE_NAME = "VOTERID";
+	public static final String GET_LOUNASPAIKAT_ENDPOINT = "/lounaspaikat/Kempele";
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -26,7 +27,7 @@ class Koodihaaste22ApplicationTests {
 		// GET /lounaspaikat/Kempele
 		// requestissa ei cookieta:
 		// niin responsessa tulee http-only cookie
-		mockMvc.perform(get("/lounaspaikat/Kempele"))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
 				.andExpect(cookie().exists(VOTERID_COOKIE_NAME))
 				.andExpect(cookie().httpOnly(VOTERID_COOKIE_NAME, true));
@@ -35,7 +36,7 @@ class Koodihaaste22ApplicationTests {
 	@Test
 	void shouldNotSetVoterIdIfCookieSet() throws Exception {
 		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
-		mockMvc.perform(get("/lounaspaikat/Kempele").cookie(cookieVoterId))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
 				.andExpect(cookie().doesNotExist(VOTERID_COOKIE_NAME));
 	}
