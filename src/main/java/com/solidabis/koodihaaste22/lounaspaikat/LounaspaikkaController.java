@@ -1,6 +1,6 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
-import com.solidabis.koodihaaste22.aanestys.VoteRepository;
+import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;

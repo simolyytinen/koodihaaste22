@@ -1,15 +1,16 @@
 package com.solidabis.koodihaaste22.aanestys;
 
+import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class VoteRepository {
+public class VoteRepositoryImpl implements VoteRepository {
     private Map<String, Integer> votes = new HashMap<>();
 
-    public VoteRepository() {
+    public VoteRepositoryImpl() {
         votes.put("9rewu9rewrew9u", 10);
     }
 
