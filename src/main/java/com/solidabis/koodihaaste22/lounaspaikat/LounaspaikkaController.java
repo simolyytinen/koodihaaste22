@@ -5,6 +5,7 @@ import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
+import com.solidabis.koodihaaste22.utils.TimeSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,11 @@ import java.util.List;
 @RestController
 public class LounaspaikkaController {
     private final VoteRepository voteRepository;
+    private final TimeSource timeSource;
 
-    public LounaspaikkaController(VoteRepository voteRepository) {
+    public LounaspaikkaController(VoteRepository voteRepository, TimeSource timeSource) {
         this.voteRepository = voteRepository;
+        this.timeSource = timeSource;
     }
 
     @GetMapping("/lounaspaikat/{city}")
@@ -46,14 +49,14 @@ public class LounaspaikkaController {
                     .id("9rewu9rewrew9u")
                     .name("Shell HelmiSimpukka Kempele")
                     .openingHours("10-14")
-                    .votes(voteRepository.getVotes("9rewu9rewrew9u"))
+                    .votes(voteRepository.getVotes("9rewu9rewrew9u", timeSource.today()))
                     .dishes(dishes)
                     .build(),
             RestaurantDTO.builder()
                     .id("feoij23oij3233")
                     .name("Göreme pizzeria")
                     .openingHours("10-14")
-                    .votes(voteRepository.getVotes("feoij23oij3233"))
+                    .votes(voteRepository.getVotes("feoij23oij3233", timeSource.today()))
                     .dishes(dishes)
                     .build()
         );

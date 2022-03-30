@@ -34,7 +34,7 @@ public class VoteRepositoryImpl implements VoteRepository {
         alreadyVoted.put(voterId, restaurantId);
     }
 
-    public Integer getVotes(String restaurantId) {
-        return votes.get(new Pair<>(LocalDate.now(), restaurantId));
+    public Integer getVotes(String restaurantId, LocalDate today) {
+        return votes.get(new Pair<>(today, restaurantId));
     }
 }
