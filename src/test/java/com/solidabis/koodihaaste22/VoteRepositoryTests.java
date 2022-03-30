@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 public class VoteRepositoryTests {
@@ -45,5 +46,13 @@ public class VoteRepositoryTests {
         repository.registerVote("restaurantid", "voterid2", TODAY);
         repository.registerVote("restaurantid2", "voterid3", TODAY);
         assertEquals(2, repository.getVotes("restaurantid", TODAY));
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnAlreadyVotedRestaurantForToday() {
+        repository.registerVote("restaurantid", "voterid1", TODAY);
+        assertEquals("restaurantid", repository.todaysVote("voterid1", TODAY));
+        assertNull(repository.todaysVote("voterid2", TODAY));
     }
 }

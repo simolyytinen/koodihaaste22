@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,11 +45,16 @@ public class LounaspaikkaController {
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,
                                                    HttpServletResponse response) {
+        String voterId = null;
+
         if(voterIdCookie==null) {
             // lähetä cookie
-            var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, "432432432432");
+            voterId = UUID.randomUUID().toString();
+            var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, voterId);
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
+        } else {
+            voterId = voterIdCookie;
         }
 
         String html = source.loadCity(city);
@@ -71,7 +77,7 @@ public class LounaspaikkaController {
         }).collect(Collectors.toList());
 
         return LounasPaikkaResponseDTO.builder()
-                .alreadyVoted(false)
+                .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
                 .restaurants(ravintolat)
                 .build();
     }

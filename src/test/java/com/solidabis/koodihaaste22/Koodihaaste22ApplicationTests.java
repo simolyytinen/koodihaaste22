@@ -66,7 +66,7 @@ class Koodihaaste22ApplicationTests {
 		/*
 		GET /lounaspaikat/Kempele
 		{
-		   "alreadyVoted": false,
+		   "alreadyVoted": "98rewu98rweu89rew98",
 		   "restaurants": [
 		   	   {
 		   	      "id": "98rewu98rweu89rew98",
@@ -85,7 +85,7 @@ class Koodihaaste22ApplicationTests {
 		 */
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.alreadyVoted").isBoolean())
+				.andExpect(jsonPath("$.alreadyVoted").hasJsonPath())
 				.andExpect(jsonPath("$.restaurants").isArray())
 				.andExpect(jsonPath("$.restaurants[0].id").isString())
 				.andExpect(jsonPath("$.restaurants[0].name").isString())
@@ -105,8 +105,9 @@ class Koodihaaste22ApplicationTests {
 		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.alreadyVoted").value("30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(1));
 	}
 
@@ -130,8 +131,9 @@ class Koodihaaste22ApplicationTests {
 
 		// expect original restaurant vote to be removed
 		// and the latter restaurant to have a vote
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.alreadyVoted").value("5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38"))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
 	}
@@ -141,15 +143,16 @@ class Koodihaaste22ApplicationTests {
 		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
 
 		// given a restaurant has already been voted
-		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+		mockMvc.perform(post("/aanestys/5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38").cookie(cookieVoterId))
 				.andExpect(status().isOk());
 		// when a restaurant is revoted
-		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+		mockMvc.perform(post("/aanestys/5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38").cookie(cookieVoterId))
 				.andExpect(status().isOk());
 
 		// expect vote to be removed
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.alreadyVoted").doesNotExist())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0));
 	}
 
@@ -164,8 +167,9 @@ class Koodihaaste22ApplicationTests {
 		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId2))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.alreadyVoted").value("30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(2));
 	}
 }

@@ -8,6 +8,6 @@ import java.util.List;
 @Builder
 @Getter
 public class LounasPaikkaResponseDTO {
-    private Boolean alreadyVoted;
+    private String alreadyVoted;
     private List<RestaurantDTO> restaurants;
 }

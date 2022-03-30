@@ -15,19 +15,25 @@ public class VoteRepositoryDbImpl implements VoteRepository {
     }
 
     @Override
-    public void registerVote(String restaurantId, String voterIdCookie, LocalDate today) {
+    public void registerVote(String restaurantId, String voterId, LocalDate today) {
         var mapper = session.getMapper(VoteMapper.class);
-        var alreadyVotedRestaurant = mapper.alreadyVoted(voterIdCookie, today);
+        var alreadyVotedRestaurant = mapper.alreadyVoted(voterId, today);
         if(alreadyVotedRestaurant!=null) {
-            mapper.deleteVote(alreadyVotedRestaurant, voterIdCookie, today);
+            mapper.deleteVote(alreadyVotedRestaurant, voterId, today);
             if(alreadyVotedRestaurant.equals(restaurantId)) return;
         }
-        mapper.insertVote(restaurantId, voterIdCookie, today);
+        mapper.insertVote(restaurantId, voterId, today);
     }
 
     @Override
     public int getVotes(String restaurantId, LocalDate today) {
         var mapper = session.getMapper(VoteMapper.class);
         return mapper.loadVotes(restaurantId, today);
+    }
+
+    @Override
+    public String todaysVote(String voterId, LocalDate today) {
+        var mapper = session.getMapper(VoteMapper.class);
+        return mapper.alreadyVoted(voterId, today);
     }
 }
