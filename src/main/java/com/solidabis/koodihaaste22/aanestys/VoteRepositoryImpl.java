@@ -2,6 +2,7 @@ package com.solidabis.koodihaaste22.aanestys;
 
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import org.javatuples.Pair;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Primary
 public class VoteRepositoryImpl implements VoteRepository {
     private final Map<Pair<LocalDate,String>, Integer> votes = new HashMap<>();
     private final Map<Pair<LocalDate,String>, String> alreadyVoted = new HashMap<>();
@@ -20,6 +22,7 @@ public class VoteRepositoryImpl implements VoteRepository {
         votes.put(new Pair<>(LocalDate.of(2022,4,1), "feoij23oij3233"), 0);
     }
 
+    @Override
     public void registerVote(String restaurantId, String voterIdCookie, LocalDate today) {
         var voterId = new Pair<>(today, voterIdCookie);
         if(alreadyVoted.containsKey(voterId)) {
@@ -34,7 +37,8 @@ public class VoteRepositoryImpl implements VoteRepository {
         alreadyVoted.put(voterId, restaurantId);
     }
 
-    public Integer getVotes(String restaurantId, LocalDate today) {
+    @Override
+    public int getVotes(String restaurantId, LocalDate today) {
         return votes.get(new Pair<>(today, restaurantId));
     }
 }
