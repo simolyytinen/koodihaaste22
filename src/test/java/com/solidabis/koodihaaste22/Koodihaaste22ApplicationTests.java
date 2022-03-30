@@ -107,7 +107,7 @@ class Koodihaaste22ApplicationTests {
 
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(11));
+				.andExpect(jsonPath("$.restaurants[0].votes").value(1));
 	}
 
 	@Test
@@ -121,7 +121,7 @@ class Koodihaaste22ApplicationTests {
 
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(11))
+				.andExpect(jsonPath("$.restaurants[0].votes").value(1))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(0));
 
 		// when vote another restaurant
@@ -132,7 +132,7 @@ class Koodihaaste22ApplicationTests {
 		// and the latter restaurant to have a vote
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(10))
+				.andExpect(jsonPath("$.restaurants[0].votes").value(0))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
 	}
 
@@ -150,7 +150,7 @@ class Koodihaaste22ApplicationTests {
 		// expect vote to be removed
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(10));
+				.andExpect(jsonPath("$.restaurants[0].votes").value(0));
 	}
 
 	@Test
@@ -166,6 +166,6 @@ class Koodihaaste22ApplicationTests {
 
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(12));
+				.andExpect(jsonPath("$.restaurants[0].votes").value(2));
 	}
 }

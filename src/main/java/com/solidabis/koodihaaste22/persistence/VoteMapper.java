@@ -1,5 +1,6 @@
 package com.solidabis.koodihaaste22.persistence;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -13,4 +14,10 @@ public interface VoteMapper {
 
     @Select({"SELECT COUNT(restaurantid) FROM vote WHERE restaurantid = #{restaurantId} AND votingdate = #{today}"})
     int loadVotes(String restaurantId, LocalDate today);
+
+    @Select({"SELECT restaurantid FROM vote WHERE voterid = #{voterId} AND votingdate = #{today}"})
+    String alreadyVoted(String voterId, LocalDate today);
+
+    @Delete({"DELETE FROM vote WHERE restaurantid = #{restaurantId} AND voterid = #{voterId} AND votingdate = #{today}"})
+    void deleteVote(String restaurantId, String voterId, LocalDate today);
 }

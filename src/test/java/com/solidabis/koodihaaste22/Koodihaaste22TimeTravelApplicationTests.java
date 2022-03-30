@@ -43,7 +43,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
 
         mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.restaurants[0].votes").value(11));
+                .andExpect(jsonPath("$.restaurants[0].votes").value(1));
 
         // when vote another restaurant on another day
         given(timeSource.today()).willReturn(LocalDate.of(2022,4,1));
@@ -54,6 +54,6 @@ public class Koodihaaste22TimeTravelApplicationTests {
         // expect
         mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.restaurants[0].votes").value(11));
+                .andExpect(jsonPath("$.restaurants[0].votes").value(1));
     }
 }

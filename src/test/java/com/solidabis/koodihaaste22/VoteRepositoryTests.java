@@ -1,7 +1,6 @@
 package com.solidabis.koodihaaste22;
 
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
-import com.solidabis.koodihaaste22.persistence.VoteRepositoryDbImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 public class VoteRepositoryTests {
     @Autowired
-    @Qualifier("dbimpl")
     private VoteRepository repository;
 
     private final LocalDate TODAY = LocalDate.of(2022,3,30);
@@ -25,5 +23,27 @@ public class VoteRepositoryTests {
     public void shouldSaveAndReturnVoteToday() {
         repository.registerVote("restaurantid", "voterid", TODAY);
         assertEquals(1, repository.getVotes("restaurantid", TODAY));
+    }
+
+    @Test
+    @Transactional
+    public void shouldSaveAndNotReturnForNextDay() {
+        repository.registerVote("restaurantid", "voterid", TODAY);
+        assertEquals(0, repository.getVotes("restaurantid", TODAY.plusDays(1)));
+    }
+
+    @Test
+    @Transactional
+    public void shouldNotHaveVotesByDefault() {
+        assertEquals(0, repository.getVotes("restaurantidnotvoted", TODAY));
+    }
+
+    @Test
+    @Transactional
+    public void shouldReturnMultipleVotesCountCorrentcly() {
+        repository.registerVote("restaurantid", "voterid1", TODAY);
+        repository.registerVote("restaurantid", "voterid2", TODAY);
+        repository.registerVote("restaurantid2", "voterid3", TODAY);
+        assertEquals(2, repository.getVotes("restaurantid", TODAY));
     }
 }
