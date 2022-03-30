@@ -8,19 +8,19 @@ import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping(produces = "application/json")
 public class LounaspaikkaController {
     private final VoteRepository voteRepository;
     private final TimeSource timeSource;
@@ -36,6 +36,10 @@ public class LounaspaikkaController {
     }
 
     @GetMapping("/lounaspaikat/{city}")
+    @Operation(summary = "Load restaurants for given city")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Restaurant loading was successful")
+    })
     @Transactional
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,

@@ -3,6 +3,9 @@ package com.solidabis.koodihaaste22.aanestys;
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,11 @@ public class VotingController {
     }
 
     @PostMapping("/aanestys/{restaurantid}")
+    @Operation(summary = "Give a vote for chosen restaurant")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Voting was succesful"),
+            @ApiResponse(responseCode = "400", description = "VOTERID cookie was missing")
+    })
     @Transactional
     public void registerVote(@PathVariable("restaurantid") String restaurantId,
                              @CookieValue(name= Constants.VOTERID_COOKIE_NAME) String voterIdCookie) {
