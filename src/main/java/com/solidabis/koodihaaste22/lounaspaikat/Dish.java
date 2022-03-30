@@ -10,4 +10,5 @@ import java.util.List;
 public class Dish {
     private String name;
     private List<String> attributes;
+    private String price;
 }

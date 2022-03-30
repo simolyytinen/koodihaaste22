@@ -1,5 +1,7 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
@@ -7,6 +9,7 @@ import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,18 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class LounaspaikkaController {
     private final VoteRepository voteRepository;
     private final TimeSource timeSource;
+    private final LounaspaikkaParser parser;
+    private final LounaspaikkaSource source;
 
-    public LounaspaikkaController(VoteRepository voteRepository, TimeSource timeSource) {
+    public LounaspaikkaController(VoteRepository voteRepository, TimeSource timeSource, LounaspaikkaParser parser,
+                                  LounaspaikkaSource source) {
         this.voteRepository = voteRepository;
         this.timeSource = timeSource;
+        this.parser = parser;
+        this.source = source;
     }
 
     @GetMapping("/lounaspaikat/{city}")
+    @Transactional
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,
                                                    HttpServletResponse response) {
@@ -37,32 +47,28 @@ public class LounaspaikkaController {
             response.addCookie(cookie);
         }
 
-        var dishes = List.of(
-          DishDTO.builder()
-                  .price("10,90EUR")
-                  .name("Helmen lihapullaa ja ruskeaa kastiketta")
-                  .attributes(List.of("L","G"))
-                  .build()
-        );
-        var restaurants = List.of(
-            RestaurantDTO.builder()
-                    .id("9rewu9rewrew9u")
-                    .name("Shell HelmiSimpukka Kempele")
-                    .openingHours("10-14")
-                    .votes(voteRepository.getVotes("9rewu9rewrew9u", timeSource.today()))
-                    .dishes(dishes)
-                    .build(),
-            RestaurantDTO.builder()
-                    .id("feoij23oij3233")
-                    .name("Göreme pizzeria")
-                    .openingHours("10-14")
-                    .votes(voteRepository.getVotes("feoij23oij3233", timeSource.today()))
-                    .dishes(dishes)
-                    .build()
-        );
+        String html = source.loadCity(city);
+        var paikat = parser.parse(html);
+        var ravintolat = paikat.stream().map(paikka -> {
+            var paikkaId = Hashing.sha256().hashString(paikka.getCity()+paikka.getName(), Charsets.UTF_8).toString();
+            return RestaurantDTO.builder()
+                    .id(paikkaId)
+                    .name(paikka.getName())
+                    .openingHours(paikka.getOpeningHours())
+                    .votes(voteRepository.getVotes(paikkaId, timeSource.today()))
+                    .dishes(paikka.getDishes().stream().map(dish ->
+                        DishDTO.builder()
+                                .name(dish.getName())
+                                .price(dish.getPrice())
+                                .attributes(dish.getAttributes())
+                                .build()
+                    ).collect(Collectors.toList()))
+                    .build();
+        }).collect(Collectors.toList());
+
         return LounasPaikkaResponseDTO.builder()
                 .alreadyVoted(false)
-                .restaurants(restaurants)
+                .restaurants(ravintolat)
                 .build();
     }
 }

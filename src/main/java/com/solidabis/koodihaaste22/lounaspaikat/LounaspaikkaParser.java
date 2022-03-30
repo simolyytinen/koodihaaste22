@@ -2,11 +2,13 @@ package com.solidabis.koodihaaste22.lounaspaikat;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class LounaspaikkaParser {
     public List<LounasPaikka> parse(String html) {
         var document = Jsoup.parse(html);
@@ -34,6 +36,7 @@ public class LounaspaikkaParser {
     private Dish parseDish(Element dish) {
         return Dish.builder()
                 .name(dish.select("p.dish").text())
+                .price(dish.select("p.price").text())
                 .attributes(dish.select("p.dish a").stream().map(Element::text).collect(Collectors.toList()))
                 .build();
     }

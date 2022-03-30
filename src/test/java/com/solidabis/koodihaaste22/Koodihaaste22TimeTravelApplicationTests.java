@@ -38,7 +38,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
         given(timeSource.today()).willReturn(LocalDate.of(2022,3,30));
 
         // given a restaurant has already been voted at previous day
-        mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+        mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
                 .andExpect(status().isOk());
 
         mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
@@ -48,7 +48,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
         // when vote another restaurant on another day
         given(timeSource.today()).willReturn(LocalDate.of(2022,4,1));
 
-        mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+        mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
                 .andExpect(status().isOk());
 
         // expect

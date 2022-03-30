@@ -42,6 +42,7 @@ public class LounasPaikkaParserTests {
         assertEquals("Kempele", paikat.get(0).getCity());
         assertEquals("Wieninleike l", paikat.get(0).getDishName(0));
         assertEquals(List.of("l"), paikat.get(0).getDishAttributes(0));
+        assertEquals("13,90e", paikat.get(0).getDishPrice(0));
     }
 
     private String getTestHtml(String resourceName) {

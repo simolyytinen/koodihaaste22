@@ -14,12 +14,15 @@ public class LounasPaikka {
     private String city;
     private List<Dish> dishes;
 
-    @JsonIgnore
     public String getDishName(int index) {
         return dishes.get(index).getName();
     }
 
     public List<String> getDishAttributes(int index) {
         return dishes.get(index).getAttributes();
+    }
+
+    public String getDishPrice(int index) {
+        return dishes.get(index).getPrice();
     }
 }
