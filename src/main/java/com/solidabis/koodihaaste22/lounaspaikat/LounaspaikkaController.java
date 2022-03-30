@@ -46,6 +46,13 @@ public class LounaspaikkaController {
                     .openingHours("10-14")
                     .votes(voteRepository.getVotes("9rewu9rewrew9u"))
                     .dishes(dishes)
+                    .build(),
+            RestaurantDTO.builder()
+                    .id("feoij23oij3233")
+                    .name("Göreme pizzeria")
+                    .openingHours("10-14")
+                    .votes(voteRepository.getVotes("feoij23oij3233"))
+                    .dishes(dishes)
                     .build()
         );
         return LounasPaikkaResponseDTO.builder()

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
@@ -78,12 +79,40 @@ class Koodihaaste22ApplicationTests {
 	}
 
 	@Test
+	@DirtiesContext
 	public void shouldAddVoteCountAfterVoting() throws Exception {
-		mockMvc.perform(post("/aanestys/9rewu9rewrew9u"))
+		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
 				.andExpect(status().isOk());
 
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(11));
+	}
+
+	@Test
+	@DirtiesContext
+	public void shouldChangeVoteToDifferentRestaurantIfRevotedTheSameDay() throws Exception {
+		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+
+		// given a restaurant has already been voted
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.restaurants[0].votes").value(11));
+
+		// then vote another restaurant
+		mockMvc.perform(post("/aanestys/feoij23oij3233").cookie(cookieVoterId))
+				.andExpect(status().isOk());
+
+		// expect original restaurant vote to be removed
+		// and the latter restaurant to have a vote
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.restaurants[0].votes").value(10))
+				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
 	}
 }
