@@ -43,6 +43,12 @@ class Koodihaaste22ApplicationTests {
 	}
 
 	@Test
+	void shouldNotAcceptVoteIfNoCookieSet() throws Exception {
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u"))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	void shouldReturnListOfLounaspaikatFromKempele() throws Exception {
 		/*
 		GET /lounaspaikat/Kempele
