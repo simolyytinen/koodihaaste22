@@ -102,7 +102,8 @@ class Koodihaaste22ApplicationTests {
 
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.restaurants[0].votes").value(11));
+				.andExpect(jsonPath("$.restaurants[0].votes").value(11))
+				.andExpect(jsonPath("$.restaurants[1].votes").value(0));
 
 		// then vote another restaurant
 		mockMvc.perform(post("/aanestys/feoij23oij3233").cookie(cookieVoterId))
