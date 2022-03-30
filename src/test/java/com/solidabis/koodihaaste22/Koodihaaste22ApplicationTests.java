@@ -116,4 +116,20 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(jsonPath("$.restaurants[0].votes").value(10))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
 	}
+
+	@Test
+	@DirtiesContext
+	public void shouldAcceptVotesForSingleRestaurantFromMultipleVoters() throws Exception {
+		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä 1");
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+				.andExpect(status().isOk());
+
+		var cookieVoterId2 = new Cookie(VOTERID_COOKIE_NAME, "Höttöä 2");
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId2))
+				.andExpect(status().isOk());
+
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.restaurants[0].votes").value(12));
+	}
 }
