@@ -20,6 +20,10 @@ public class VoteRepositoryImpl implements VoteRepository {
         if(alreadyVoted.containsKey(voterIdCookie)) {
             var votedRestaurant = alreadyVoted.get(voterIdCookie);
             votes.compute(votedRestaurant, (key,value) -> value-1);
+            alreadyVoted.remove(voterIdCookie);
+            if(votedRestaurant.equals(restaurantId)) {
+                return;
+            }
         }
         votes.compute(restaurantId, (key,value) -> value+1);
         alreadyVoted.put(voterIdCookie, restaurantId);

@@ -10,6 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
 
+import static com.solidabis.koodihaaste22.TestConstants.GET_LOUNASPAIKAT_ENDPOINT;
+import static com.solidabis.koodihaaste22.TestConstants.VOTERID_COOKIE_NAME;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -17,9 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class Koodihaaste22ApplicationTests {
-	public static final String VOTERID_COOKIE_NAME = "VOTERID";
-	public static final String GET_LOUNASPAIKAT_ENDPOINT = "/lounaspaikat/Kempele";
-
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -111,7 +110,7 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(jsonPath("$.restaurants[0].votes").value(11))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(0));
 
-		// then vote another restaurant
+		// when vote another restaurant
 		mockMvc.perform(post("/aanestys/feoij23oij3233").cookie(cookieVoterId))
 				.andExpect(status().isOk());
 
@@ -121,6 +120,23 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(10))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
+	}
+
+	@Test
+	public void shouldRemoveVoteIfVotesTheSameRestaurantAgain() throws Exception {
+		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+
+		// given a restaurant has already been voted
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+				.andExpect(status().isOk());
+		// when a restaurant is revoted
+		mockMvc.perform(post("/aanestys/9rewu9rewrew9u").cookie(cookieVoterId))
+				.andExpect(status().isOk());
+
+		// expect vote to be removed
+		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.restaurants[0].votes").value(10));
 	}
 
 	@Test
