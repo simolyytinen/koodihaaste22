@@ -4,6 +4,7 @@ import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
+import com.solidabis.koodihaaste22.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,18 +17,19 @@ import java.util.List;
 
 @RestController
 public class LounaspaikkaController {
-    private static final String VOTERID_COOKIE_NAME = "VOTERID";
+    private final VoteRepository voteRepository;
 
-    @Autowired
-    private VoteRepository voteRepository;
+    public LounaspaikkaController(VoteRepository voteRepository) {
+        this.voteRepository = voteRepository;
+    }
 
     @GetMapping("/lounaspaikat/{city}")
-    public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name=VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
+    public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,
                                                    HttpServletResponse response) {
         if(voterIdCookie==null) {
             // lähetä cookie
-            var cookie = new Cookie(VOTERID_COOKIE_NAME, "432432432432");
+            var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, "432432432432");
             cookie.setHttpOnly(true);
             response.addCookie(cookie);
         }

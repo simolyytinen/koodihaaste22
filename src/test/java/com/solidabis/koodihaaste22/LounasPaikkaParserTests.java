@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,7 +41,7 @@ public class LounasPaikkaParserTests {
         assertEquals("11-14", paikat.get(0).getOpeningHours());
         assertEquals("Kempele", paikat.get(0).getCity());
         assertEquals("Wieninleike l", paikat.get(0).getDishName(0));
-        assertEquals("l", paikat.get(0).getDishAttributes(0).get(0));
+        assertEquals(List.of("l"), paikat.get(0).getDishAttributes(0));
     }
 
     private String getTestHtml(String resourceName) {
