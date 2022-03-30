@@ -1,6 +1,8 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,5 +26,9 @@ public class LounasPaikka {
 
     public String getDishPrice(int index) {
         return dishes.get(index).getPrice();
+    }
+
+    public String id() {
+        return Hashing.sha256().hashString(city+name, Charsets.UTF_8).toString();
     }
 }

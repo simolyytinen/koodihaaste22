@@ -9,9 +9,10 @@ import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,15 +38,17 @@ public class LounaspaikkaController {
     }
 
     @GetMapping("/lounaspaikat/{city}")
-    @Operation(summary = "Load restaurants for given city")
+    @Operation(summary = "Load restaurants for given city. Will return a cookie containing the voter id if not set for the request")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Restaurant loading was successful")
+            @ApiResponse(responseCode = "200", description = "Restaurant loading was successful"),
+            @ApiResponse(responseCode = "500", description = "Could not fetch/parse restaurants from the source",
+                    content = { @Content(schema = @Schema(description = "Default Spring error response", type = "object"))})
     })
     @Transactional
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,
                                                    HttpServletResponse response) {
-        String voterId = null;
+        String voterId;
 
         if(voterIdCookie==null) {
             // lähetä cookie
@@ -59,26 +62,30 @@ public class LounaspaikkaController {
 
         String html = source.loadCity(city);
         var paikat = parser.parse(html);
-        var ravintolat = paikat.stream().map(paikka -> {
-            var paikkaId = Hashing.sha256().hashString(paikka.getCity()+paikka.getName(), Charsets.UTF_8).toString();
-            return RestaurantDTO.builder()
-                    .id(paikkaId)
-                    .name(paikka.getName())
-                    .openingHours(paikka.getOpeningHours())
-                    .votes(voteRepository.getVotes(paikkaId, timeSource.today()))
-                    .dishes(paikka.getDishes().stream().map(dish ->
-                        DishDTO.builder()
-                                .name(dish.getName())
-                                .price(dish.getPrice())
-                                .attributes(dish.getAttributes())
-                                .build()
-                    ).collect(Collectors.toList()))
-                    .build();
-        }).collect(Collectors.toList());
+        var ravintolat = paikat.stream().map(this::makeRestaurantDTO).collect(Collectors.toList());
 
         return LounasPaikkaResponseDTO.builder()
                 .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
                 .restaurants(ravintolat)
+                .build();
+    }
+
+    private RestaurantDTO makeRestaurantDTO(LounasPaikka paikka) {
+        var paikkaId = paikka.id();
+        return RestaurantDTO.builder()
+                .id(paikkaId)
+                .name(paikka.getName())
+                .openingHours(paikka.getOpeningHours())
+                .votes(voteRepository.getVotes(paikkaId, timeSource.today()))
+                .dishes(paikka.getDishes().stream().map(this::buildDishDTO).collect(Collectors.toList()))
+                .build();
+    }
+
+    private DishDTO buildDishDTO(Dish dish) {
+        return DishDTO.builder()
+                .name(dish.getName())
+                .price(dish.getPrice())
+                .attributes(dish.getAttributes())
                 .build();
     }
 }

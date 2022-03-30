@@ -23,14 +23,15 @@ public class VotingController {
     }
 
     @PostMapping("/aanestys/{restaurantid}")
-    @Operation(summary = "Give a vote for chosen restaurant")
+    @Operation(summary = "Give/remove a vote for given restaurant")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Voting was succesful"),
-            @ApiResponse(responseCode = "400", description = "VOTERID cookie was missing")
+            @ApiResponse(responseCode = "200", description = "Vote/vote removal was succesful"),
+            @ApiResponse(responseCode = "400", description = "VOTERID cookie was missing"),
+            @ApiResponse(responseCode = "500", description = "Database error occurred")
     })
     @Transactional
     public void registerVote(@PathVariable("restaurantid") String restaurantId,
-                             @CookieValue(name= Constants.VOTERID_COOKIE_NAME) String voterIdCookie) {
+                             @CookieValue(name = Constants.VOTERID_COOKIE_NAME) String voterIdCookie) {
         voteRepository.registerVote(restaurantId, voterIdCookie, timeSource.today());
     }
 }

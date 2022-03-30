@@ -11,9 +11,10 @@ public class LounaspaikkaSource {
     @Cacheable("cities")
     public String loadCity(String city) {
         try {
-            return Jsoup.connect("https://www.lounaat.info/haku?etsi="+city).get().toString();
+            var url = String.format("https://www.lounaat.info/haku?etsi=%s", city);
+            return Jsoup.connect(url).get().toString();
         } catch (IOException e) {
-            throw new RuntimeException("Ei voi ladata lounastietoja kaupungille "+city, e);
+            throw new RuntimeException("Ei voi ladata lounastietoja kaupungille", e);
         }
     }
 }
