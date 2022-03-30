@@ -1,7 +1,7 @@
-package com.solidabis.koodihaaste22.persistence;
+package com.solidabis.koodihaaste22.aanestys;
 
+import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;

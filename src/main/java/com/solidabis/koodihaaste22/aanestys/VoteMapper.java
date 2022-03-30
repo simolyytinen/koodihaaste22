@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.persistence;
+package com.solidabis.koodihaaste22.aanestys;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
