@@ -14,11 +14,11 @@ import javax.servlet.http.Cookie;
 
 import java.time.LocalDate;
 
-import static com.solidabis.koodihaaste22.TestConstants.GET_LOUNASPAIKAT_ENDPOINT;
-import static com.solidabis.koodihaaste22.TestConstants.VOTERID_COOKIE_NAME;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static com.solidabis.koodihaaste22.RequestUtils.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -98,57 +98,56 @@ class Koodihaaste22ApplicationTests {
 	@Test
 	@DirtiesContext
 	public void shouldAddVoteCountAfterVoting() throws Exception {
-		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+		final String restaurantId = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
 
-		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
+		mockMvc.perform(vote(restaurantId, "Höttöä"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
+		mockMvc.perform(loadRestaurants("Höttöä"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.alreadyVoted").value("30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
+				.andExpect(jsonPath("$.alreadyVoted").value(restaurantId))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(1));
 	}
 
 	@Test
 	@DirtiesContext
 	public void shouldChangeVoteToDifferentRestaurantIfRevotedTheSameDay() throws Exception {
-		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+		final String restaurant1 = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
+		final String restaurant2 = "5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38";
 
 		// given a restaurant has already been voted
-		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
+		mockMvc.perform(vote(restaurant1, "Höttöä"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
+		mockMvc.perform(loadRestaurants("Höttöä"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(1))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(0));
 
 		// when vote another restaurant
-		mockMvc.perform(post("/aanestys/5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38").cookie(cookieVoterId))
+		mockMvc.perform(vote(restaurant2, "Höttöä"))
 				.andExpect(status().isOk());
 
 		// expect original restaurant vote to be removed
 		// and the latter restaurant to have a vote
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
+		mockMvc.perform(loadRestaurants("Höttöä"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.alreadyVoted").value("5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38"))
+				.andExpect(jsonPath("$.alreadyVoted").value(restaurant2))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(1));
 	}
 
 	@Test
 	public void shouldRemoveVoteIfVotesTheSameRestaurantAgain() throws Exception {
-		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
-
+		final String restaurant = "5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38";
 		// given a restaurant has already been voted
-		mockMvc.perform(post("/aanestys/5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38").cookie(cookieVoterId))
+		mockMvc.perform(vote(restaurant, "Höttöä"))
 				.andExpect(status().isOk());
 		// when a restaurant is revoted
-		mockMvc.perform(post("/aanestys/5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38").cookie(cookieVoterId))
+		mockMvc.perform(vote(restaurant, "Höttöä"))
 				.andExpect(status().isOk());
-
 		// expect vote to be removed
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
+		mockMvc.perform(loadRestaurants("Höttöä"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").doesNotExist())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0));
@@ -157,17 +156,16 @@ class Koodihaaste22ApplicationTests {
 	@Test
 	@DirtiesContext
 	public void shouldAcceptVotesForSingleRestaurantFromMultipleVoters() throws Exception {
-		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä 1");
-		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
+		final String restaurant = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
+		mockMvc.perform(vote(restaurant, "Höttöä 1"))
 				.andExpect(status().isOk());
 
-		var cookieVoterId2 = new Cookie(VOTERID_COOKIE_NAME, "Höttöä 2");
-		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId2))
+		mockMvc.perform(vote(restaurant, "Höttöä 2"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
+		mockMvc.perform(loadRestaurants("Höttöä 1"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.alreadyVoted").value("30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
+				.andExpect(jsonPath("$.alreadyVoted").value(restaurant))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(2));
 	}
 }
