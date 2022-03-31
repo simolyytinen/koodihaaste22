@@ -1,7 +1,8 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
+import com.solidabis.koodihaaste22.lounaspaikat.parsing.Dish;
+import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounasPaikka;
+import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,18 +49,8 @@ public class LounaspaikkaController {
     @Transactional
     public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
                                                    @PathVariable("city") String city,
-                                                   HttpServletResponse response) {
-        String voterId;
-
-        if(voterIdCookie==null) {
-            // lähetä cookie
-            voterId = UUID.randomUUID().toString();
-            var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, voterId);
-            cookie.setHttpOnly(true);
-            response.addCookie(cookie);
-        } else {
-            voterId = voterIdCookie;
-        }
+                                                   HttpServletResponse response) throws IOException {
+        String voterId = makeOrReturnVoterCookie(voterIdCookie, response);
 
         String html = source.loadCity(city);
         var paikat = parser.parse(html);
@@ -68,6 +60,15 @@ public class LounaspaikkaController {
                 .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
                 .restaurants(ravintolat)
                 .build();
+    }
+
+    private String makeOrReturnVoterCookie(String voterIdCookie, HttpServletResponse response) {
+        if(voterIdCookie != null) return voterIdCookie;
+        var voterId = UUID.randomUUID().toString();
+        var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, voterId);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+        return voterId;
     }
 
     private RestaurantDTO makeRestaurantDTO(LounasPaikka paikka) {

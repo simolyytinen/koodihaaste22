@@ -1,7 +1,7 @@
 package com.solidabis.koodihaaste22;
 
 import com.google.common.io.Resources;
-import com.solidabis.koodihaaste22.lounaspaikat.LounaspaikkaParser;
+import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

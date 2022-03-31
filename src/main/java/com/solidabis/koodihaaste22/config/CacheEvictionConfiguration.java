@@ -8,6 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.solidabis.koodihaaste22.utils.Constants.CITY_CACHE_NAME;
+
 @Configuration
 @Slf4j
 @EnableScheduling
@@ -21,7 +23,7 @@ public class CacheEvictionConfiguration {
     @Scheduled(fixedRate = 2, timeUnit = TimeUnit.MINUTES)
     public void clearCaches() {
         log.info("Clearing city cache");
-        var cache = cacheManager.getCache("cities");
+        var cache = cacheManager.getCache(CITY_CACHE_NAME);
         if(cache!=null) cache.clear();
     }
 }

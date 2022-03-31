@@ -1,6 +1,5 @@
-package com.solidabis.koodihaaste22.lounaspaikat;
+package com.solidabis.koodihaaste22.lounaspaikat.parsing;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import lombok.Builder;

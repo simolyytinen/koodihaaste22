@@ -26,14 +26,6 @@ class Koodihaaste22ApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@Autowired
-	private TimeSource timeSource;
-
-	@BeforeEach
-	public void setup() {
-		timeSource.stopAt(LocalDate.of(2022,3,30));
-	}
-
 	@Test
 	void shouldSetVoterIdIfNoCookieSet() throws Exception {
 		// GET /lounaspaikat/Kempele

@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat;
+package com.solidabis.koodihaaste22.lounaspaikat.parsing;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
