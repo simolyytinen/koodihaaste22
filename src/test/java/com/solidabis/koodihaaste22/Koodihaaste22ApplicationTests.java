@@ -39,7 +39,7 @@ class Koodihaaste22ApplicationTests {
 
 	@Test
 	void shouldNotSetVoterIdIfCookieSet() throws Exception {
-		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
+		var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "voterid");
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT).cookie(cookieVoterId))
 				.andExpect(status().isOk())
 				.andExpect(cookie().doesNotExist(VOTERID_COOKIE_NAME));
@@ -92,10 +92,10 @@ class Koodihaaste22ApplicationTests {
 	public void shouldAddVoteCountAfterVoting() throws Exception {
 		final String restaurantId = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
 
-		mockMvc.perform(vote(restaurantId, "Höttöä"))
+		mockMvc.perform(vote(restaurantId, "voterid"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(loadRestaurants("Höttöä"))
+		mockMvc.perform(loadRestaurants("voterid"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").value(restaurantId))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(1));
@@ -108,21 +108,21 @@ class Koodihaaste22ApplicationTests {
 		final String restaurant2 = "5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38";
 
 		// given a restaurant has already been voted
-		mockMvc.perform(vote(restaurant1, "Höttöä"))
+		mockMvc.perform(vote(restaurant1, "voterid"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(loadRestaurants("Höttöä"))
+		mockMvc.perform(loadRestaurants("voterid"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(1))
 				.andExpect(jsonPath("$.restaurants[1].votes").value(0));
 
 		// when vote another restaurant
-		mockMvc.perform(vote(restaurant2, "Höttöä"))
+		mockMvc.perform(vote(restaurant2, "voterid"))
 				.andExpect(status().isOk());
 
 		// expect original restaurant vote to be removed
 		// and the latter restaurant to have a vote
-		mockMvc.perform(loadRestaurants("Höttöä"))
+		mockMvc.perform(loadRestaurants("voterid"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").value(restaurant2))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0))
@@ -133,13 +133,13 @@ class Koodihaaste22ApplicationTests {
 	public void shouldRemoveVoteIfVotesTheSameRestaurantAgain() throws Exception {
 		final String restaurant = "5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38";
 		// given a restaurant has already been voted
-		mockMvc.perform(vote(restaurant, "Höttöä"))
+		mockMvc.perform(vote(restaurant, "voterid"))
 				.andExpect(status().isOk());
 		// when a restaurant is revoted
-		mockMvc.perform(vote(restaurant, "Höttöä"))
+		mockMvc.perform(vote(restaurant, "voterid"))
 				.andExpect(status().isOk());
 		// expect vote to be removed
-		mockMvc.perform(loadRestaurants("Höttöä"))
+		mockMvc.perform(loadRestaurants("voterid"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").doesNotExist())
 				.andExpect(jsonPath("$.restaurants[0].votes").value(0));
@@ -149,13 +149,13 @@ class Koodihaaste22ApplicationTests {
 	@DirtiesContext
 	public void shouldAcceptVotesForSingleRestaurantFromMultipleVoters() throws Exception {
 		final String restaurant = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
-		mockMvc.perform(vote(restaurant, "Höttöä 1"))
+		mockMvc.perform(vote(restaurant, "voterid 1"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(vote(restaurant, "Höttöä 2"))
+		mockMvc.perform(vote(restaurant, "voterid 2"))
 				.andExpect(status().isOk());
 
-		mockMvc.perform(loadRestaurants("Höttöä 1"))
+		mockMvc.perform(loadRestaurants("voterid 1"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").value(restaurant))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(2));
