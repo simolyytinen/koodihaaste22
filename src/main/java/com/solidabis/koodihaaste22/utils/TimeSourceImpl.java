@@ -6,8 +6,19 @@ import java.time.LocalDate;
 
 @Component
 public class TimeSourceImpl implements TimeSource {
+    private LocalDate fixedDate;
+
     @Override
     public LocalDate today() {
-        return LocalDate.now();
+        if(fixedDate!=null) {
+            return fixedDate;
+        } else {
+            return LocalDate.now();
+        }
+    }
+
+    @Override
+    public void stopAt(LocalDate fixedDate) {
+        this.fixedDate = fixedDate;
     }
 }

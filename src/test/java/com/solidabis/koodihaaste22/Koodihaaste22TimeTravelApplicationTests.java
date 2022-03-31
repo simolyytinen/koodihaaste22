@@ -27,7 +27,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Autowired
     private TimeSource timeSource;
 
     @Test
@@ -35,7 +35,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
     public void shouldAllowVoteForARestaurantOnSeparateDays() throws Exception {
         var cookieVoterId = new Cookie(VOTERID_COOKIE_NAME, "Höttöä");
 
-        given(timeSource.today()).willReturn(LocalDate.of(2022,3,30));
+        timeSource.stopAt(LocalDate.of(2022,3,30));
 
         // given a restaurant has already been voted at previous day
         mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
@@ -46,7 +46,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
                 .andExpect(jsonPath("$.restaurants[0].votes").value(1));
 
         // when vote another restaurant on another day
-        given(timeSource.today()).willReturn(LocalDate.of(2022,4,1));
+        timeSource.stopAt(LocalDate.of(2022,4,1));
 
         mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a").cookie(cookieVoterId))
                 .andExpect(status().isOk());

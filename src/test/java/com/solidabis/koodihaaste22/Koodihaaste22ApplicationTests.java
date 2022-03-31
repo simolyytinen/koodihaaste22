@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,7 +16,6 @@ import java.time.LocalDate;
 
 import static com.solidabis.koodihaaste22.TestConstants.GET_LOUNASPAIKAT_ENDPOINT;
 import static com.solidabis.koodihaaste22.TestConstants.VOTERID_COOKIE_NAME;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -28,12 +26,12 @@ class Koodihaaste22ApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@Autowired
 	private TimeSource timeSource;
 
 	@BeforeEach
 	public void setup() {
-		given(timeSource.today()).willReturn(LocalDate.of(2022,3,30));
+		timeSource.stopAt(LocalDate.of(2022,3,30));
 	}
 
 	@Test
