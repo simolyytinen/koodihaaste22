@@ -37,6 +37,11 @@ public class VotingController {
     }
 
     @GetMapping("/tulokset")
+    @Operation(summary = "Return todays voting results")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Result retrieval was successful"),
+            @ApiResponse(responseCode = "500", description = "Database error occurred")
+    })
     @Transactional
     public DailyVotingResultDTO results() {
         var results = voteRepository.getDayResults(timeSource.today());
