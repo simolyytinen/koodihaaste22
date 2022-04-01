@@ -11,6 +11,8 @@ import java.util.List;
 public class LounasPaikkaResponseDTO {
     @Schema(description = "If non-null, contains the voted restaurant id for today")
     private String alreadyVoted;
+    @Schema(description = "Current date")
+    private String date;
     @Schema(description = "List of restaurants")
     private List<RestaurantDTO> restaurants;
 }

@@ -14,6 +14,7 @@ import javax.servlet.http.Cookie;
 
 import java.time.LocalDate;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -76,6 +77,7 @@ class Koodihaaste22ApplicationTests {
 		mockMvc.perform(get(GET_LOUNASPAIKAT_ENDPOINT))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.alreadyVoted").hasJsonPath())
+				.andExpect(jsonPath("$.date", matchesPattern("^[0-9]{4}-[0-9]{2}-[0-9]{2}$")))
 				.andExpect(jsonPath("$.restaurants").isArray())
 				.andExpect(jsonPath("$.restaurants[0].id").isString())
 				.andExpect(jsonPath("$.restaurants[0].name").isString())

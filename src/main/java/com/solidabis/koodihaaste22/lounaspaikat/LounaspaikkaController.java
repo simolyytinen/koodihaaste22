@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,6 +63,7 @@ public class LounaspaikkaController {
 
         return LounasPaikkaResponseDTO.builder()
                 .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
+                .date(timeSource.today().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .restaurants(ravintolat)
                 .build();
     }
