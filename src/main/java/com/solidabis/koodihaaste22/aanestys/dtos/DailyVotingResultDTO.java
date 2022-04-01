@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.aanestys;
+package com.solidabis.koodihaaste22.aanestys.dtos;
 
 import lombok.Builder;
 import lombok.Getter;

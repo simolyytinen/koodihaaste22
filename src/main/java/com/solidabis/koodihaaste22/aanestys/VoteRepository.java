@@ -1,5 +1,6 @@
 package com.solidabis.koodihaaste22.aanestys;
 
+import com.solidabis.koodihaaste22.aanestys.db.VotingResult;
 import com.solidabis.koodihaaste22.persistence.TodaysVoteRepository;
 
 import java.time.LocalDate;

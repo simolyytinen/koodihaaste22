@@ -1,5 +1,6 @@
-package com.solidabis.koodihaaste22.aanestys;
+package com.solidabis.koodihaaste22.aanestys.db;
 
+import com.solidabis.koodihaaste22.aanestys.VoteRepository;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 

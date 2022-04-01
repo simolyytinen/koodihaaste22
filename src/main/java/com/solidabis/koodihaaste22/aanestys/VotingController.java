@@ -1,5 +1,7 @@
 package com.solidabis.koodihaaste22.aanestys;
 
+import com.solidabis.koodihaaste22.aanestys.dtos.DailyVotingResultDTO;
+import com.solidabis.koodihaaste22.aanestys.dtos.ResultDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
