@@ -1,6 +1,7 @@
 package com.solidabis.koodihaaste22;
 
 import com.solidabis.koodihaaste22.utils.TimeSource;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
-
-import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,6 +25,12 @@ import static com.solidabis.koodihaaste22.RequestUtils.*;
 class Koodihaaste22ApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
+
+	@BeforeEach
+	void setup() throws Exception {
+		// restaurants must be loaded first
+		mockMvc.perform(loadRestaurants("voterid"));
+	}
 
 	@Test
 	void shouldSetVoterIdIfNoCookieSet() throws Exception {
@@ -48,7 +53,7 @@ class Koodihaaste22ApplicationTests {
 
 	@Test
 	void shouldNotAcceptVoteIfNoCookieSet() throws Exception {
-		mockMvc.perform(post("/aanestys/9rewu9rewrew9u"))
+		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
 				.andExpect(status().isBadRequest());
 	}
 
@@ -167,7 +172,7 @@ class Koodihaaste22ApplicationTests {
 	@DirtiesContext
 	public void shouldReturnDayResults() throws Exception {
 		final String restaurant1 = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
-		final String restaurant2 = "40b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
+		final String restaurant2 = "5ab414c39694dfd25cf39b684ff0b2d770f48b110231a8d6b6107ad3c34a7f38";
 
 		// 3 votes for restaurant 1
 		mockMvc.perform(vote(restaurant1, "voter1")).andExpect(status().isOk());

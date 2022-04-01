@@ -11,5 +11,6 @@ CREATE TABLE vote (
     voterid VARCHAR(64) NOT NULL,
     votingdate DATE NOT NULL,
 
-    PRIMARY KEY(restaurantid, voterid, votingdate)
+    PRIMARY KEY(restaurantid, voterid, votingdate),
+    FOREIGN KEY(restaurantid) REFERENCES restaurant(id)
 );
