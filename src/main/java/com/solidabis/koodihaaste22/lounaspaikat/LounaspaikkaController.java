@@ -3,7 +3,7 @@ package com.solidabis.koodihaaste22.lounaspaikat;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.Dish;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounasPaikka;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
-import com.solidabis.koodihaaste22.persistence.VoteRepository;
+import com.solidabis.koodihaaste22.persistence.TodaysVoteRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
 import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
@@ -27,12 +27,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(produces = "application/json")
 public class LounaspaikkaController {
-    private final VoteRepository voteRepository;
+    private final TodaysVoteRepository voteRepository;
     private final TimeSource timeSource;
     private final LounaspaikkaParser parser;
     private final LounaspaikkaSource source;
 
-    public LounaspaikkaController(VoteRepository voteRepository, TimeSource timeSource, LounaspaikkaParser parser,
+    public LounaspaikkaController(TodaysVoteRepository voteRepository, TimeSource timeSource, LounaspaikkaParser parser,
                                   LounaspaikkaSource source) {
         this.voteRepository = voteRepository;
         this.timeSource = timeSource;

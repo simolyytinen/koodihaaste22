@@ -1,6 +1,5 @@
 package com.solidabis.koodihaaste22.aanestys;
 
-import com.solidabis.koodihaaste22.persistence.VotingResult;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;

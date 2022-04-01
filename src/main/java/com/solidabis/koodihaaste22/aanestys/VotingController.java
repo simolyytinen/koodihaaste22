@@ -1,6 +1,5 @@
 package com.solidabis.koodihaaste22.aanestys;
 
-import com.solidabis.koodihaaste22.persistence.VoteRepository;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController

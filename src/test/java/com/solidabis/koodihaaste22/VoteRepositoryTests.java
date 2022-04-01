@@ -1,9 +1,8 @@
 package com.solidabis.koodihaaste22;
 
-import com.solidabis.koodihaaste22.persistence.VoteRepository;
+import com.solidabis.koodihaaste22.aanestys.VoteRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 

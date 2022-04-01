@@ -1,6 +1,5 @@
-package com.solidabis.koodihaaste22.persistence;
+package com.solidabis.koodihaaste22.aanestys;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

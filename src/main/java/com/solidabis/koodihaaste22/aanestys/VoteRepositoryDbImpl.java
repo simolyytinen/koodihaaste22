@@ -1,7 +1,5 @@
 package com.solidabis.koodihaaste22.aanestys;
 
-import com.solidabis.koodihaaste22.persistence.VoteRepository;
-import com.solidabis.koodihaaste22.persistence.VotingResult;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
