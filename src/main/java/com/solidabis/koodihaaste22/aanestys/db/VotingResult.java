@@ -8,4 +8,6 @@ import lombok.Setter;
 public class VotingResult {
     private int votes;
     private String restaurantId;
+    private String name;
+    private String city;
 }

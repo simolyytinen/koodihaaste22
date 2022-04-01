@@ -22,7 +22,8 @@ public interface VoteMapper {
     @Delete({"DELETE FROM vote WHERE restaurantid = #{restaurantId} AND voterid = #{voterId} AND votingdate = #{today}"})
     void deleteVote(String restaurantId, String voterId, LocalDate today);
 
-    @Select({"SELECT COUNT(restaurantid) AS votes, restaurantid AS restaurantId FROM vote",
-            "WHERE votingdate = #{today} GROUP BY restaurantid ORDER BY votes DESC"})
+    @Select({"SELECT COUNT(v.restaurantid) AS votes, v.restaurantid AS restaurantId, r.name AS name, r.city AS city",
+            "FROM vote v INNER JOIN restaurant r ON v.restaurantid=r.id",
+            "WHERE v.votingdate = #{today} GROUP BY v.restaurantid ORDER BY votes DESC"})
     List<VotingResult> loadDayVotes(LocalDate today);
 }

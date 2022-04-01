@@ -43,6 +43,8 @@ public class VotingController {
         var resultList = results.stream().map(result -> ResultDTO.builder()
                 .votes(result.getVotes())
                 .restaurantid(result.getRestaurantId())
+                .name(result.getName())
+                .city(result.getCity())
                 .build());
         return DailyVotingResultDTO.builder()
                 .date(timeSource.today().format(DateTimeFormatter.ISO_LOCAL_DATE))

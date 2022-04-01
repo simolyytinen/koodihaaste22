@@ -31,7 +31,7 @@ public class VoteRepositoryTests {
             .build();
     private final LounasPaikka paikka2 = LounasPaikka.builder()
             .name("restaurant2")
-            .city("Kempele")
+            .city("Oulu")
             .build();
 
     @BeforeEach
@@ -88,6 +88,10 @@ public class VoteRepositoryTests {
         var results = repository.getDayResults(TODAY);
         assertEquals(2, results.size());
         assertEquals(3, results.get(0).getVotes());
+        assertEquals("restaurant1", results.get(0).getName());
+        assertEquals("Kempele", results.get(0).getCity());
         assertEquals(2, results.get(1).getVotes());
+        assertEquals("restaurant2", results.get(1).getName());
+        assertEquals("Oulu", results.get(1).getCity());
     }
 }

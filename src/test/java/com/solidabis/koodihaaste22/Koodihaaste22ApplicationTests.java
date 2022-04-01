@@ -188,7 +188,11 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(jsonPath("$.results").isArray())
 				.andExpect(jsonPath("$.results[0].votes").value(3))
 				.andExpect(jsonPath("$.results[0].restaurantid").value(restaurant1))
+				.andExpect(jsonPath("$.results[0].name").value("Rosso Zeppelin, Kempele"))
+				.andExpect(jsonPath("$.results[0].city").value("Kempele"))
 				.andExpect(jsonPath("$.results[1].votes").value(1))
-				.andExpect(jsonPath("$.results[1].restaurantid").value(restaurant2));
+				.andExpect(jsonPath("$.results[1].restaurantid").value(restaurant2))
+				.andExpect(jsonPath("$.results[1].name").value("Shell HelmiSimpukka Kempele Zeppelin"))
+				.andExpect(jsonPath("$.results[1].city").value("Kempele"));
 	}
 }

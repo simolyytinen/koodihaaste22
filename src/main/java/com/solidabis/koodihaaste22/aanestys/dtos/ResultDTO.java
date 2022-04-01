@@ -8,4 +8,6 @@ import lombok.Getter;
 public class ResultDTO {
     private int votes;
     private String restaurantid;
+    private String name;
+    private String city;
 }
