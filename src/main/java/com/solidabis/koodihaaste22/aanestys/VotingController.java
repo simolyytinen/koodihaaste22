@@ -7,10 +7,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class VotingController {
@@ -33,5 +34,19 @@ public class VotingController {
     public void registerVote(@PathVariable("restaurantid") String restaurantId,
                              @CookieValue(name = Constants.VOTERID_COOKIE_NAME) String voterIdCookie) {
         voteRepository.registerVote(restaurantId, voterIdCookie, timeSource.today());
+    }
+
+    @GetMapping("/tulokset")
+    @Transactional
+    public DailyVotingResultDTO results() {
+        var results = voteRepository.getDayResults(timeSource.today());
+        var resultList = results.stream().map(result -> ResultDTO.builder()
+                .votes(result.getVotes())
+                .restaurantid(result.getRestaurantId())
+                .build());
+        return DailyVotingResultDTO.builder()
+                .date(timeSource.today().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .results(resultList.collect(Collectors.toList()))
+                .build();
     }
 }

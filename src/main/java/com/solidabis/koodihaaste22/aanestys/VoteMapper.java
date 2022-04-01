@@ -1,11 +1,13 @@
 package com.solidabis.koodihaaste22.aanestys;
 
+import com.solidabis.koodihaaste22.persistence.VotingResult;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper
 public interface VoteMapper {
@@ -20,4 +22,8 @@ public interface VoteMapper {
 
     @Delete({"DELETE FROM vote WHERE restaurantid = #{restaurantId} AND voterid = #{voterId} AND votingdate = #{today}"})
     void deleteVote(String restaurantId, String voterId, LocalDate today);
+
+    @Select({"SELECT COUNT(restaurantid) AS votes, restaurantid AS restaurantId FROM vote",
+            "WHERE votingdate = #{today} GROUP BY restaurantid ORDER BY votes DESC"})
+    List<VotingResult> loadDayVotes(LocalDate today);
 }

@@ -55,4 +55,20 @@ public class VoteRepositoryTests {
         assertEquals("restaurantid", repository.todaysVote("voterid1", TODAY));
         assertNull(repository.todaysVote("voterid2", TODAY));
     }
+
+    @Test
+    @Transactional
+    public void shouldReturnVoteResultsForDay() {
+        repository.registerVote("restaurant3", "voter6", TODAY);
+        repository.registerVote("restaurant1", "voter1", TODAY);
+        repository.registerVote("restaurant1", "voter3", TODAY);
+        repository.registerVote("restaurant2", "voter4", TODAY);
+        repository.registerVote("restaurant1", "voter2", TODAY);
+        repository.registerVote("restaurant2", "voter5", TODAY);
+        var results = repository.getDayResults(TODAY);
+        assertEquals(3, results.size());
+        assertEquals(3, results.get(0).getVotes());
+        assertEquals(2, results.get(1).getVotes());
+        assertEquals(1, results.get(2).getVotes());
+    }
 }

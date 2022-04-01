@@ -1,10 +1,12 @@
 package com.solidabis.koodihaaste22.aanestys;
 
 import com.solidabis.koodihaaste22.persistence.VoteRepository;
+import com.solidabis.koodihaaste22.persistence.VotingResult;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public class VoteRepositoryDbImpl implements VoteRepository {
@@ -16,7 +18,7 @@ public class VoteRepositoryDbImpl implements VoteRepository {
 
     @Override
     public void registerVote(String restaurantId, String voterId, LocalDate today) {
-        var mapper = session.getMapper(VoteMapper.class);
+        var mapper = mapper();
         var alreadyVotedRestaurant = mapper.alreadyVoted(voterId, today);
         if(alreadyVotedRestaurant!=null) {
             mapper.deleteVote(alreadyVotedRestaurant, voterId, today);
@@ -27,13 +29,18 @@ public class VoteRepositoryDbImpl implements VoteRepository {
 
     @Override
     public int getVotes(String restaurantId, LocalDate today) {
-        var mapper = session.getMapper(VoteMapper.class);
-        return mapper.loadVotes(restaurantId, today);
+        return mapper().loadVotes(restaurantId, today);
     }
 
     @Override
     public String todaysVote(String voterId, LocalDate today) {
-        var mapper = session.getMapper(VoteMapper.class);
-        return mapper.alreadyVoted(voterId, today);
+        return mapper().alreadyVoted(voterId, today);
     }
+
+    @Override
+    public List<VotingResult> getDayResults(LocalDate today) {
+        return mapper().loadDayVotes(today);
+    }
+
+    private VoteMapper mapper() { return session.getMapper(VoteMapper.class); }
 }

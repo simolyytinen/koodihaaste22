@@ -162,4 +162,28 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(jsonPath("$.alreadyVoted").value(restaurant))
 				.andExpect(jsonPath("$.restaurants[0].votes").value(2));
 	}
+
+	@Test
+	@DirtiesContext
+	public void shouldReturnDayResults() throws Exception {
+		final String restaurant1 = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
+		final String restaurant2 = "40b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";
+
+		// 3 votes for restaurant 1
+		mockMvc.perform(vote(restaurant1, "voter1")).andExpect(status().isOk());
+		mockMvc.perform(vote(restaurant1, "voter2")).andExpect(status().isOk());
+		mockMvc.perform(vote(restaurant1, "voter3")).andExpect(status().isOk());
+
+		// 1 vote fro restaurant 2
+		mockMvc.perform(vote(restaurant2, "voter4")).andExpect(status().isOk());
+
+		mockMvc.perform(loadResults())
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.date").isString())
+				.andExpect(jsonPath("$.results").isArray())
+				.andExpect(jsonPath("$.results[0].votes").value(3))
+				.andExpect(jsonPath("$.results[0].restaurantid").value(restaurant1))
+				.andExpect(jsonPath("$.results[1].votes").value(1))
+				.andExpect(jsonPath("$.results[1].restaurantid").value(restaurant2));
+	}
 }
