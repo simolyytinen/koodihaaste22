@@ -1,5 +1,6 @@
 package com.solidabis.koodihaaste22.lounaspaikat;
 
+import com.solidabis.koodihaaste22.lounaspaikat.db.LounaspaikkaRepository;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.Dish;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounasPaikka;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
@@ -31,13 +32,15 @@ public class LounaspaikkaController {
     private final TimeSource timeSource;
     private final LounaspaikkaParser parser;
     private final LounaspaikkaSource source;
+    private final LounaspaikkaRepository repository;
 
     public LounaspaikkaController(TodaysVoteRepository voteRepository, TimeSource timeSource, LounaspaikkaParser parser,
-                                  LounaspaikkaSource source) {
+                                  LounaspaikkaSource source, LounaspaikkaRepository repository) {
         this.voteRepository = voteRepository;
         this.timeSource = timeSource;
         this.parser = parser;
         this.source = source;
+        this.repository = repository;
     }
 
     @GetMapping("/lounaspaikat/{city}")
@@ -55,6 +58,7 @@ public class LounaspaikkaController {
 
         String html = source.loadCity(city);
         var paikat = parser.parse(html);
+        paikat.forEach(repository::saveRestaurant);
         var ravintolat = paikat.stream()
                 // filter out places that are not actually in city, name could contain the city!
                 .filter(paikka -> paikka.getCity().equals(city))
