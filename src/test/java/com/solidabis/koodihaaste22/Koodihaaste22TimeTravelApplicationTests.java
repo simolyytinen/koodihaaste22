@@ -1,16 +1,19 @@
 package com.solidabis.koodihaaste22;
 
+import com.solidabis.koodihaaste22.lounaspaikat.LounaspaikkaSource;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,8 +28,13 @@ public class Koodihaaste22TimeTravelApplicationTests {
     @Autowired
     private TimeSource timeSource;
 
+    @MockBean
+    private LounaspaikkaSource source;
+
     @BeforeEach
     public void setup() throws Exception {
+        given(source.loadCity("Kempele")).willReturn(TestDataUtils.getTestHtml("kempele.html"));
+        // restaurants must be loaded first
         mockMvc.perform(loadRestaurants("voterid"));
     }
 

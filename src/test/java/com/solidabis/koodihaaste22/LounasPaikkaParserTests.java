@@ -1,14 +1,12 @@
 package com.solidabis.koodihaaste22;
 
-import com.google.common.io.Resources;
 import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.solidabis.koodihaaste22.TestDataUtils.getTestHtml;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LounasPaikkaParserTests {
@@ -45,12 +43,4 @@ public class LounasPaikkaParserTests {
         assertEquals("13,90e", paikat.get(0).getDishPrice(0));
     }
 
-    private String getTestHtml(String resourceName) {
-        var resource = Resources.getResource(resourceName);
-        try {
-            return Resources.toString(resource, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("could not load resource " + resourceName, e);
-        }
-    }
 }
