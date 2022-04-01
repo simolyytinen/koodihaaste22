@@ -54,7 +54,11 @@ public class LounaspaikkaController {
 
         String html = source.loadCity(city);
         var paikat = parser.parse(html);
-        var ravintolat = paikat.stream().map(this::makeRestaurantDTO).collect(Collectors.toList());
+        var ravintolat = paikat.stream()
+                // filter out places that are not actually in city, name could contain the city!
+                .filter(paikka -> paikka.getCity().equals(city))
+                .map(this::makeRestaurantDTO)
+                .collect(Collectors.toList());
 
         return LounasPaikkaResponseDTO.builder()
                 .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
@@ -66,7 +70,9 @@ public class LounaspaikkaController {
         if(voterIdCookie != null) return voterIdCookie;
         var voterId = UUID.randomUUID().toString();
         var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, voterId);
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
+        cookie.setMaxAge(60*60*24);
         response.addCookie(cookie);
         return voterId;
     }
