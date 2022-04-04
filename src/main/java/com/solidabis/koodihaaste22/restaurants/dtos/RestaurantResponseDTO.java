@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.dtos;
+package com.solidabis.koodihaaste22.restaurants.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class LounasPaikkaResponseDTO {
+public class RestaurantResponseDTO {
     @Schema(description = "If non-null, contains the voted restaurant id for today")
     private String alreadyVoted;
     @Schema(description = "Current date")

@@ -3,6 +3,7 @@ package com.solidabis.koodihaaste22.utils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Component
 public class TimeSourceImpl implements TimeSource {
@@ -10,11 +11,7 @@ public class TimeSourceImpl implements TimeSource {
 
     @Override
     public LocalDate today() {
-        if(fixedDate!=null) {
-            return fixedDate;
-        } else {
-            return LocalDate.now();
-        }
+        return Objects.requireNonNullElseGet(fixedDate, LocalDate::now);
     }
 
     @Override

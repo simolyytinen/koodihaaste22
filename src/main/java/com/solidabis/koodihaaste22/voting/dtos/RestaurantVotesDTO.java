@@ -1,11 +1,11 @@
-package com.solidabis.koodihaaste22.aanestys.dtos;
+package com.solidabis.koodihaaste22.voting.dtos;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @Getter
-public class ResultDTO {
+public class RestaurantVotesDTO {
     private int votes;
     private String restaurantid;
     private String name;

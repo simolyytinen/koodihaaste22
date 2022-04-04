@@ -1,6 +1,6 @@
-package com.solidabis.koodihaaste22.aanestys.db;
+package com.solidabis.koodihaaste22.voting.db;
 
-import com.solidabis.koodihaaste22.aanestys.VoteRepository;
+import com.solidabis.koodihaaste22.voting.VoteRepository;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -37,7 +37,7 @@ public class VoteRepositoryDbImpl implements VoteRepository {
     }
 
     @Override
-    public List<VotingResult> getDayResults(LocalDate today) {
+    public List<VotingResult> getResults(LocalDate today) {
         return mapper().loadDayVotes(today);
     }
 

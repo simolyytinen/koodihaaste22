@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.parsing;
+package com.solidabis.koodihaaste22.restaurants.parsing;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class LounasPaikka {
+public class Restaurant {
     private String name;
     private String openingHours;
     private String city;

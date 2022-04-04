@@ -13,10 +13,10 @@ import static com.solidabis.koodihaaste22.utils.Constants.CITY_CACHE_NAME;
 @Configuration
 @Slf4j
 @EnableScheduling
-public class CacheEvictionConfiguration {
+public class RestaurantCachePurgingConfiguration {
     private final CacheManager cacheManager;
 
-    public CacheEvictionConfiguration(CacheManager cacheManager) {
+    public RestaurantCachePurgingConfiguration(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 

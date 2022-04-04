@@ -1,6 +1,6 @@
 package com.solidabis.koodihaaste22;
 
-import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
+import com.solidabis.koodihaaste22.restaurants.parsing.RestaurantParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,13 +9,13 @@ import java.util.List;
 import static com.solidabis.koodihaaste22.TestDataUtils.getTestHtml;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LounasPaikkaParserTests {
+public class RestaurantParserTests {
 
-    private LounaspaikkaParser parser;
+    private RestaurantParser parser;
 
     @BeforeEach
     public void setup() {
-        parser = new LounaspaikkaParser();
+        parser = new RestaurantParser();
     }
 
     @Test

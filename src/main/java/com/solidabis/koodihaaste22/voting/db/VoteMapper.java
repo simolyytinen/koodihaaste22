@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.aanestys.db;
+package com.solidabis.koodihaaste22.voting.db;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -23,7 +23,10 @@ public interface VoteMapper {
     void deleteVote(String restaurantId, String voterId, LocalDate today);
 
     @Select({"SELECT COUNT(v.restaurantid) AS votes, v.restaurantid AS restaurantId, r.name AS name, r.city AS city",
-            "FROM vote v INNER JOIN restaurant r ON v.restaurantid=r.id",
-            "WHERE v.votingdate = #{today} GROUP BY v.restaurantid ORDER BY votes DESC"})
+            "FROM vote v",
+            "INNER JOIN restaurant r ON v.restaurantid=r.id",
+            "WHERE v.votingdate = #{today}",
+            "GROUP BY v.restaurantid",
+            "ORDER BY votes DESC"})
     List<VotingResult> loadDayVotes(LocalDate today);
 }

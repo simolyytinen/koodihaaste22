@@ -1,7 +1,7 @@
-package com.solidabis.koodihaaste22.aanestys;
+package com.solidabis.koodihaaste22.voting;
 
-import com.solidabis.koodihaaste22.aanestys.dtos.DailyVotingResultDTO;
-import com.solidabis.koodihaaste22.aanestys.dtos.ResultDTO;
+import com.solidabis.koodihaaste22.voting.dtos.VotingResultDTO;
+import com.solidabis.koodihaaste22.voting.dtos.RestaurantVotesDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,15 +45,15 @@ public class VotingController {
             @ApiResponse(responseCode = "500", description = "Database error occurred")
     })
     @Transactional
-    public DailyVotingResultDTO results() {
-        var results = voteRepository.getDayResults(timeSource.today());
-        var resultList = results.stream().map(result -> ResultDTO.builder()
+    public VotingResultDTO results() {
+        var results = voteRepository.getResults(timeSource.today());
+        var resultList = results.stream().map(result -> RestaurantVotesDTO.builder()
                 .votes(result.getVotes())
                 .restaurantid(result.getRestaurantId())
                 .name(result.getName())
                 .city(result.getCity())
                 .build());
-        return DailyVotingResultDTO.builder()
+        return VotingResultDTO.builder()
                 .date(timeSource.today().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .results(resultList.collect(Collectors.toList()))
                 .build();

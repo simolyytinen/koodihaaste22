@@ -1,13 +1,13 @@
-package com.solidabis.koodihaaste22.lounaspaikat;
+package com.solidabis.koodihaaste22.restaurants;
 
-import com.solidabis.koodihaaste22.lounaspaikat.db.LounaspaikkaRepository;
-import com.solidabis.koodihaaste22.lounaspaikat.parsing.Dish;
-import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounasPaikka;
-import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounaspaikkaParser;
+import com.solidabis.koodihaaste22.restaurants.db.RestaurantRepository;
+import com.solidabis.koodihaaste22.restaurants.parsing.Dish;
+import com.solidabis.koodihaaste22.restaurants.parsing.Restaurant;
+import com.solidabis.koodihaaste22.restaurants.parsing.RestaurantParser;
 import com.solidabis.koodihaaste22.persistence.TodaysVoteRepository;
-import com.solidabis.koodihaaste22.lounaspaikat.dtos.DishDTO;
-import com.solidabis.koodihaaste22.lounaspaikat.dtos.LounasPaikkaResponseDTO;
-import com.solidabis.koodihaaste22.lounaspaikat.dtos.RestaurantDTO;
+import com.solidabis.koodihaaste22.restaurants.dtos.DishDTO;
+import com.solidabis.koodihaaste22.restaurants.dtos.RestaurantResponseDTO;
+import com.solidabis.koodihaaste22.restaurants.dtos.RestaurantDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,15 +28,17 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(produces = "application/json")
-public class LounaspaikkaController {
+public class RestaurantController {
+    public static final int VOTERID_EXPIRY_TIME_SECONDS = 60 * 60 * 24;
+
     private final TodaysVoteRepository voteRepository;
     private final TimeSource timeSource;
-    private final LounaspaikkaParser parser;
-    private final LounaspaikkaSource source;
-    private final LounaspaikkaRepository repository;
+    private final RestaurantParser parser;
+    private final RestaurantSource source;
+    private final RestaurantRepository repository;
 
-    public LounaspaikkaController(TodaysVoteRepository voteRepository, TimeSource timeSource, LounaspaikkaParser parser,
-                                  LounaspaikkaSource source, LounaspaikkaRepository repository) {
+    public RestaurantController(TodaysVoteRepository voteRepository, TimeSource timeSource, RestaurantParser parser,
+                                RestaurantSource source, RestaurantRepository repository) {
         this.voteRepository = voteRepository;
         this.timeSource = timeSource;
         this.parser = parser;
@@ -52,24 +54,24 @@ public class LounaspaikkaController {
                     content = { @Content(schema = @Schema(description = "Default Spring error response", type = "object"))})
     })
     @Transactional
-    public LounasPaikkaResponseDTO haeLounasPaikat(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
-                                                   @PathVariable("city") String city,
-                                                   HttpServletResponse response) throws IOException {
+    public RestaurantResponseDTO fetchRestaurants(@CookieValue(name= Constants.VOTERID_COOKIE_NAME, required = false) String voterIdCookie,
+                                                  @PathVariable("city") String city,
+                                                  HttpServletResponse response) throws IOException {
         String voterId = makeOrReturnVoterCookie(voterIdCookie, response);
 
         String html = source.loadCity(city);
-        var paikat = parser.parse(html);
-        paikat.forEach(repository::saveRestaurant);
-        var ravintolat = paikat.stream()
+        var restaurants = parser.parse(html);
+        restaurants.forEach(repository::saveRestaurant);
+        var restaurantDTOs = restaurants.stream()
                 // filter out places that are not actually in city, name could contain the city!
-                .filter(paikka -> paikka.getCity().equals(city))
+                .filter(restaurant -> restaurant.getCity().equals(city))
                 .map(this::makeRestaurantDTO)
                 .collect(Collectors.toList());
 
-        return LounasPaikkaResponseDTO.builder()
+        return RestaurantResponseDTO.builder()
                 .alreadyVoted(voteRepository.todaysVote(voterId, timeSource.today()))
                 .date(timeSource.today().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                .restaurants(ravintolat)
+                .restaurants(restaurantDTOs)
                 .build();
     }
 
@@ -79,12 +81,12 @@ public class LounaspaikkaController {
         var cookie = new Cookie(Constants.VOTERID_COOKIE_NAME, voterId);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(60*60*24);
+        cookie.setMaxAge(VOTERID_EXPIRY_TIME_SECONDS);
         response.addCookie(cookie);
         return voterId;
     }
 
-    private RestaurantDTO makeRestaurantDTO(LounasPaikka paikka) {
+    private RestaurantDTO makeRestaurantDTO(Restaurant paikka) {
         var paikkaId = paikka.id();
         return RestaurantDTO.builder()
                 .id(paikkaId)

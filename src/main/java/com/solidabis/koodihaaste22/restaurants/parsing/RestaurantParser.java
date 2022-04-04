@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.parsing;
+package com.solidabis.koodihaaste22.restaurants.parsing;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class LounaspaikkaParser {
-    public List<LounasPaikka> parse(String html) {
+public class RestaurantParser {
+    public List<Restaurant> parse(String html) {
         var document = Jsoup.parse(html);
         var restaurantElements = document.select("div.menu.item");
         return restaurantElements.stream()
@@ -18,8 +18,8 @@ public class LounaspaikkaParser {
                 .collect(Collectors.toList());
     }
 
-    private LounasPaikka parseRestaurant(Element element) {
-        return LounasPaikka.builder()
+    private Restaurant parseRestaurant(Element element) {
+        return Restaurant.builder()
                 .name(element.select("h3 a").text())
                 .openingHours(element.select("p.lunch.closed").text())
                 .city(parseCity(element.select("div.item-footer p").attr("title")))

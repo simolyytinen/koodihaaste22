@@ -1,6 +1,6 @@
 package com.solidabis.koodihaaste22;
 
-import com.solidabis.koodihaaste22.lounaspaikat.LounaspaikkaSource;
+import com.solidabis.koodihaaste22.restaurants.RestaurantSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ class Koodihaaste22ApplicationTests {
 	private MockMvc mockMvc;
 
 	@MockBean
-	private LounaspaikkaSource source;
+	private RestaurantSource source;
 
 	@BeforeEach
 	void setup() throws Exception {

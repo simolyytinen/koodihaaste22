@@ -1,8 +1,8 @@
 package com.solidabis.koodihaaste22;
 
-import com.solidabis.koodihaaste22.aanestys.VoteRepository;
-import com.solidabis.koodihaaste22.lounaspaikat.db.LounaspaikkaRepository;
-import com.solidabis.koodihaaste22.lounaspaikat.parsing.LounasPaikka;
+import com.solidabis.koodihaaste22.voting.VoteRepository;
+import com.solidabis.koodihaaste22.restaurants.db.RestaurantRepository;
+import com.solidabis.koodihaaste22.restaurants.parsing.Restaurant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,38 +20,38 @@ public class VoteRepositoryTests {
     private VoteRepository repository;
 
     @Autowired
-    private LounaspaikkaRepository lounaspaikkaRepository;
+    private RestaurantRepository restaurantRepository;
 
 
     private final LocalDate TODAY = LocalDate.of(2022,3,30);
 
-    private final LounasPaikka paikka1 = LounasPaikka.builder()
+    private final Restaurant restaurant1 = Restaurant.builder()
             .name("restaurant1")
             .city("Kempele")
             .build();
-    private final LounasPaikka paikka2 = LounasPaikka.builder()
+    private final Restaurant restaurant2 = Restaurant.builder()
             .name("restaurant2")
             .city("Oulu")
             .build();
 
     @BeforeEach
     public void setup() {
-        lounaspaikkaRepository.saveRestaurant(paikka1);
-        lounaspaikkaRepository.saveRestaurant(paikka2);
+        restaurantRepository.saveRestaurant(restaurant1);
+        restaurantRepository.saveRestaurant(restaurant2);
     }
 
     @Test
     @Transactional
     public void shouldSaveAndReturnVoteToday() {
-        repository.registerVote(paikka1.id(), "voterid", TODAY);
-        assertEquals(1, repository.getVotes(paikka1.id(), TODAY));
+        repository.registerVote(restaurant1.id(), "voterid", TODAY);
+        assertEquals(1, repository.getVotes(restaurant1.id(), TODAY));
     }
 
     @Test
     @Transactional
     public void shouldSaveAndNotReturnForNextDay() {
-        repository.registerVote(paikka1.id(), "voterid", TODAY);
-        assertEquals(0, repository.getVotes(paikka1.id(), TODAY.plusDays(1)));
+        repository.registerVote(restaurant1.id(), "voterid", TODAY);
+        assertEquals(0, repository.getVotes(restaurant1.id(), TODAY.plusDays(1)));
     }
 
     @Test
@@ -63,29 +63,29 @@ public class VoteRepositoryTests {
     @Test
     @Transactional
     public void shouldReturnMultipleVotesCountCorrentcly() {
-        repository.registerVote(paikka1.id(), "voterid1", TODAY);
-        repository.registerVote(paikka1.id(), "voterid2", TODAY);
-        repository.registerVote(paikka2.id(), "voterid3", TODAY);
-        assertEquals(2, repository.getVotes(paikka1.id(), TODAY));
+        repository.registerVote(restaurant1.id(), "voterid1", TODAY);
+        repository.registerVote(restaurant1.id(), "voterid2", TODAY);
+        repository.registerVote(restaurant2.id(), "voterid3", TODAY);
+        assertEquals(2, repository.getVotes(restaurant1.id(), TODAY));
     }
 
     @Test
     @Transactional
     public void shouldReturnAlreadyVotedRestaurantForToday() {
-        repository.registerVote(paikka1.id(), "voterid1", TODAY);
-        assertEquals(paikka1.id(), repository.todaysVote("voterid1", TODAY));
+        repository.registerVote(restaurant1.id(), "voterid1", TODAY);
+        assertEquals(restaurant1.id(), repository.todaysVote("voterid1", TODAY));
         assertNull(repository.todaysVote("voterid2", TODAY));
     }
 
     @Test
     @Transactional
     public void shouldReturnVoteResultsForDay() {
-        repository.registerVote(paikka1.id(), "voter1", TODAY);
-        repository.registerVote(paikka1.id(), "voter3", TODAY);
-        repository.registerVote(paikka2.id(), "voter4", TODAY);
-        repository.registerVote(paikka1.id(), "voter2", TODAY);
-        repository.registerVote(paikka2.id(), "voter5", TODAY);
-        var results = repository.getDayResults(TODAY);
+        repository.registerVote(restaurant1.id(), "voter1", TODAY);
+        repository.registerVote(restaurant1.id(), "voter3", TODAY);
+        repository.registerVote(restaurant2.id(), "voter4", TODAY);
+        repository.registerVote(restaurant1.id(), "voter2", TODAY);
+        repository.registerVote(restaurant2.id(), "voter5", TODAY);
+        var results = repository.getResults(TODAY);
         assertEquals(2, results.size());
         assertEquals(3, results.get(0).getVotes());
         assertEquals("restaurant1", results.get(0).getName());

@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.dtos;
+package com.solidabis.koodihaaste22.restaurants.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;

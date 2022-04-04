@@ -1,6 +1,6 @@
 package com.solidabis.koodihaaste22;
 
-import com.solidabis.koodihaaste22.lounaspaikat.LounaspaikkaSource;
+import com.solidabis.koodihaaste22.restaurants.RestaurantSource;
 import com.solidabis.koodihaaste22.utils.TimeSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class Koodihaaste22TimeTravelApplicationTests {
     private TimeSource timeSource;
 
     @MockBean
-    private LounaspaikkaSource source;
+    private RestaurantSource source;
 
     @BeforeEach
     public void setup() throws Exception {

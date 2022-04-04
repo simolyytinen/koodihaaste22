@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.db;
+package com.solidabis.koodihaaste22.restaurants.db;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;

@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.aanestys.db;
+package com.solidabis.koodihaaste22.voting.db;
 
 import lombok.Getter;
 import lombok.Setter;

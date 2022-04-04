@@ -1,4 +1,4 @@
-package com.solidabis.koodihaaste22.lounaspaikat.parsing;
+package com.solidabis.koodihaaste22.restaurants.parsing;
 
 import lombok.Builder;
 import lombok.Getter;
