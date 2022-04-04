@@ -26,6 +26,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(produces = "application/json")
 public class LounaspaikkaController {
     private final TodaysVoteRepository voteRepository;

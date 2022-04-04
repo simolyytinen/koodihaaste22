@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping(produces = "application/json")
 public class VotingController {
     private final VoteRepository voteRepository;
     private final TimeSource timeSource;
