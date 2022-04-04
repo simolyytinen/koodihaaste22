@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -198,6 +199,7 @@ class Koodihaaste22ApplicationTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.date").isString())
 				.andExpect(jsonPath("$.results").isArray())
+				.andExpect(jsonPath("$.results", hasSize(2)))
 				.andExpect(jsonPath("$.results[0].votes").value(3))
 				.andExpect(jsonPath("$.results[0].restaurantid").value(restaurant1))
 				.andExpect(jsonPath("$.results[0].name").value("Rosso Zeppelin, Kempele"))

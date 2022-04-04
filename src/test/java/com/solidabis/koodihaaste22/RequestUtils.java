@@ -25,4 +25,7 @@ public class RequestUtils {
     public static MockHttpServletRequestBuilder loadResults() {
         return get(GET_RESULTS_ENDPOINT);
     }
+    public static MockHttpServletRequestBuilder loadResultsByDate(String date) {
+        return get(String.format("/api/v1/results/%s", date));
+    }
 }

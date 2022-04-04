@@ -1,5 +1,6 @@
 package com.solidabis.koodihaaste22.voting;
 
+import com.solidabis.koodihaaste22.voting.db.VotingResult;
 import com.solidabis.koodihaaste22.voting.dtos.VotingResultDTO;
 import com.solidabis.koodihaaste22.voting.dtos.RestaurantVotesDTO;
 import com.solidabis.koodihaaste22.utils.Constants;
@@ -7,10 +8,13 @@ import com.solidabis.koodihaaste22.utils.TimeSource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,7 +51,21 @@ public class VotingController {
     })
     @Transactional
     public VotingResultDTO results() {
-        var results = voteRepository.getResults(timeSource.today());
+        return buildVotingResultDTO(voteRepository.getResults(timeSource.today()));
+    }
+
+    @GetMapping("/results/{date}")
+    @Operation(summary = "Return voting results for given date")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Result retrieval was successful"),
+            @ApiResponse(responseCode = "500", description = "Database error occurred")
+    })
+    @Transactional
+    public VotingResultDTO resultsByDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return buildVotingResultDTO(voteRepository.getResults(date));
+    }
+
+    private VotingResultDTO buildVotingResultDTO(List<VotingResult> results) {
         var resultList = results.stream().map(result -> RestaurantVotesDTO.builder()
                 .votes(result.getVotes())
                 .restaurantid(result.getRestaurantId())
