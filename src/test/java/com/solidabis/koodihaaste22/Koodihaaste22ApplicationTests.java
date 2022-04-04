@@ -174,6 +174,13 @@ class Koodihaaste22ApplicationTests {
 	}
 
 	@Test
+	public void shouldNotAllowVoteForRestaurantThatHasNotLoadedYet() throws Exception {
+		final String restaurant = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50b";
+		mockMvc.perform(vote(restaurant, "voterid 1"))
+				.andExpect(status().isNotFound());
+	}
+
+	@Test
 	@DirtiesContext
 	public void shouldReturnDayResults() throws Exception {
 		final String restaurant1 = "30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a";

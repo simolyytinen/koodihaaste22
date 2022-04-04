@@ -30,6 +30,7 @@ public class VotingController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Vote/vote removal was succesful"),
             @ApiResponse(responseCode = "400", description = "VOTERID cookie was missing"),
+            @ApiResponse(responseCode = "404", description = "Restaurant with given id not found"),
             @ApiResponse(responseCode = "500", description = "Database error occurred")
     })
     @Transactional
