@@ -9,12 +9,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 public class RequestUtils {
     public static final String VOTERID_COOKIE_NAME = "VOTERID";
-    public static final String GET_LOUNASPAIKAT_ENDPOINT = "/lounaspaikat/Kempele";
-    public static final String GET_RESULTS_ENDPOINT = "/tulokset";
+    public static final String GET_LOUNASPAIKAT_ENDPOINT = "/api/v1/restaurants/Kempele";
+    public static final String GET_RESULTS_ENDPOINT = "/api/v1/results";
 
     public static MockHttpServletRequestBuilder vote(String restaurantId, String voterId) {
         var cookie = new Cookie(VOTERID_COOKIE_NAME, voterId);
-        return post(String.format("/aanestys/%s", restaurantId)).cookie(cookie);
+        return post(String.format("/api/v1/vote/%s", restaurantId)).cookie(cookie);
     }
 
     public static MockHttpServletRequestBuilder loadRestaurants(String voterId) {

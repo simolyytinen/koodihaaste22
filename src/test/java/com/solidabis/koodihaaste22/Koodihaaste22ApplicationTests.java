@@ -58,7 +58,7 @@ class Koodihaaste22ApplicationTests {
 
 	@Test
 	void shouldNotAcceptVoteIfNoCookieSet() throws Exception {
-		mockMvc.perform(post("/aanestys/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
+		mockMvc.perform(post("/api/v1/vote/30b6b2d95d40d87468c357369e1fe782b17f48092a21520f5d117162a170a50a"))
 				.andExpect(status().isBadRequest());
 	}
 

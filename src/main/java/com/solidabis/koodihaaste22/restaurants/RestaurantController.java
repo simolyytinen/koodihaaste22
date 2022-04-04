@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping(produces = "application/json")
+@RequestMapping(value = "/api/v1", produces = "application/json")
 public class RestaurantController {
     public static final int VOTERID_EXPIRY_TIME_SECONDS = 60 * 60 * 24;
 
@@ -46,7 +46,7 @@ public class RestaurantController {
         this.repository = repository;
     }
 
-    @GetMapping("/lounaspaikat/{city}")
+    @GetMapping("/restaurants/{city}")
     @Operation(summary = "Load restaurants for given city. Will return a cookie containing the voter id if not set for the request")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Restaurant loading was successful"),

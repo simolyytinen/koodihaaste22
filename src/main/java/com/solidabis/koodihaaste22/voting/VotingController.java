@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-@RequestMapping(produces = "application/json")
+@RequestMapping(value = "/api/v1", produces = "application/json")
 public class VotingController {
     private final VoteRepository voteRepository;
     private final TimeSource timeSource;
@@ -25,7 +25,7 @@ public class VotingController {
         this.timeSource = timeSource;
     }
 
-    @PostMapping("/aanestys/{restaurantid}")
+    @PostMapping("/vote/{restaurantid}")
     @Operation(summary = "Give/remove a vote for given restaurant")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Vote/vote removal was succesful"),
@@ -38,7 +38,7 @@ public class VotingController {
         voteRepository.registerVote(restaurantId, voterIdCookie, timeSource.today());
     }
 
-    @GetMapping("/tulokset")
+    @GetMapping("/results")
     @Operation(summary = "Return todays voting results")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Result retrieval was successful"),
