@@ -7,7 +7,7 @@ Arvosteluperusteet tärkeysjärjestyksessä:
     1. ravintoloiden haku paikkakuntakohtaisesti
     2. äänen antaminen, muuttaminen ja poistaminen
     3. päiväkohtaisten äänestystulosten esittäminen
- 2. Automaattitestaus
+ 2. Testit
  3. Ratkaisun selkeys ja yksinkertaisuus
  4. Käyttöliittymäratkaisut
 
