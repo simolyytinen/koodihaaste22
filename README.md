@@ -6,7 +6,7 @@ Arvosteluperusteet tärkeysjärjestyksessä:
  1. Ratkaisun oikeellisuus
     1. ravintoloiden haku paikkakuntakohtaisesti
     2. äänen antaminen, muuttaminen ja poistaminen
-    3. äänestystulosten esittäminen
+    3. äänestystulosten esittäminen reaaliajassa
  2. Testit
  3. Ratkaisun selkeys ja yksinkertaisuus
  4. Käyttöliittymäratkaisut
@@ -30,7 +30,7 @@ Päivä/selainkohtainen äänioikeus on toteutettu HTTP-only -cookiella.
 
 # Palautus
 
-_Forkkaa tästä repositorystä oma julkinen ratkaisureposi_ ja lähetä linkki 15.5.2022 mennessä sähköpostilla osoitteeseen
+_Forkkaa tästä repositorystä oma julkinen ratkaisureposi_ ja lähetä linkki 31.5.2022 mennessä sähköpostilla osoitteeseen
 koodihaaste@solidabis.com. Muokkaa README.md -tiedostoa siten, että siitä ilmenee vastauksen
 tarkastelua helpottavat tiedot, kuten käyttämäsi teknologiat ja muutaman lauseen kuvaus tekemistäsi
 ratkaisuista. Voit myös julkaista ratkaisusi esim. Herokuun, muista liittää linkki ja mahdolliset salasanat sähköpostiin!
