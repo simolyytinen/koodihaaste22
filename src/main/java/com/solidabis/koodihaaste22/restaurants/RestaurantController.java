@@ -64,7 +64,7 @@ public class RestaurantController {
         restaurants.forEach(repository::saveRestaurant);
         var restaurantDTOs = restaurants.stream()
                 // filter out places that are not actually in city, name could contain the city!
-                .filter(restaurant -> restaurant.getCity().equals(city))
+                .filter(restaurant -> restaurant.getCity().equalsIgnoreCase(city))
                 .map(this::makeRestaurantDTO)
                 .collect(Collectors.toList());
 

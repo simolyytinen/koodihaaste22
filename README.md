@@ -35,6 +35,8 @@ koodihaaste@solidabis.com. Muokkaa README.md -tiedostoa siten, että siitä ilme
 tarkastelua helpottavat tiedot, kuten käyttämäsi teknologiat ja muutaman lauseen kuvaus tekemistäsi
 ratkaisuista. Voit myös julkaista ratkaisusi esim. Herokuun, muista liittää linkki ja mahdolliset salasanat sähköpostiin!
 
+Backendin muuttaminen esim. autentikoinnin toteuttamiseksi on sallittua.
+
 Kerro samalla haluatko osallistua vain kilpailuun ja arvontaan, vai haluatko Solidabiksen
 ottavan yhteyttä myös työtarjouksiin liittyen. Se ei tarkoita, että sinulle lähetettäisiin roskapostia, vaan nimensä
 mukaisesti esimerkiksi kutsu työhaastatteluun. Voit halutessasi

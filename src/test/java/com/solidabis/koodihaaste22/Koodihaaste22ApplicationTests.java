@@ -33,7 +33,7 @@ class Koodihaaste22ApplicationTests {
 
 	@BeforeEach
 	void setup() throws Exception {
-		given(source.loadCity("Kempele")).willReturn(TestDataUtils.getTestHtml("kempele.html"));
+		given(source.loadCity("kempele")).willReturn(TestDataUtils.getTestHtml("kempele.html"));
 		// restaurants must be loaded first
 		mockMvc.perform(loadRestaurants("voterid"));
 	}
