@@ -1,5 +1,19 @@
 # Solidabis koodihaaste 2022
 
+# Frontend-toteutus
+
+Tein tämän koodihaasteen varsinaisen palautusajan jälkeen heinäkuussa 2022. Toteutukseni sisältää tähän mennessä oppimiani asioita, joten kaikkea mahdollista ei ole huomioitu.
+
+Frontend on toteutettu React JS:llä. Frontendin kehitysympäristön saa käyntiin /client hakemiston sisällä komennolla:
+
+    npm start (ensimmäisellä kerralla myös "npm install")
+
+Käyttöliittymä on yksinkertainen, ainoastaan pääsivu jossa on hakukenttä kaupungille sekä hakutulokset esitettynä ruudukkona. Pääsivulta on mahdollista äänestää haluttua ravintolaa. Äänestysnappien tekstit vaihtuvat riippuen siitä onko jo annettu ääni kyseisenä päivänä. Tulokset näkyvät reaaliajassa jokaisen ravintolan kohdalla. Erillistä sivua tulosten esittämiseen en luonut. En myöskään luonut erillistä sivua tietyn päivän tuloksien esittämiseen.
+
+Tähän toteutukseen ei sisälly testejä, koska niiden kirjoittamiseen en ole vielä tutustunut.
+
+# Alkuperäinen tehtävänanto
+
 Tehtävänäsi on toteuttaa lounaspaikkaäänestyssovelluksen frontend valmista APIa vasten (työkalut saat valita itse).
 Arvosteluperusteet tärkeysjärjestyksessä:
 
