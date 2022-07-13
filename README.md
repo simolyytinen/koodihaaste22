@@ -12,6 +12,8 @@ Käyttöliittymä on yksinkertainen, ainoastaan pääsivu jossa on hakukenttä k
 
 Tähän toteutukseen ei sisälly testejä, koska niiden kirjoittamiseen en ole vielä tutustunut.
 
+Backendiä en muokannut ollenkaan.
+
 # Alkuperäinen tehtävänanto
 
 Tehtävänäsi on toteuttaa lounaspaikkaäänestyssovelluksen frontend valmista APIa vasten (työkalut saat valita itse).
